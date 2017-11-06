@@ -42,7 +42,7 @@ Pair getPair(std::list<Pair>& lexemes) {
 
 
 void showTop(std::string fn, std::list<Pair>& lexemes) {
-	std::cout << fn << ", " << lexemes.front().getToken() << std::endl;
+	std::cout << fn << " " << lexemes.front().getToken() << std::endl;
 }
 
 bool functionA(std::list<Pair> lexemes, bool printSwitch) {
@@ -76,11 +76,11 @@ bool functionB(std::list<Pair>& lexemes, bool printSwitch) {
 		std::cout << "B-> E | E'\n";
 	}
 	if (functionE(lexemes, printSwitch)) {
-		std::cout << "Created Optional Function Definition\n\n\n";
+		//std::cout << "Created Optional Function Definition\n\n\n";
 		return true;
 	}
 	else if (functionEprime(printSwitch)) {
-		std::cout << "Created Optional Function Definition\n\n\n";
+		//std::cout << "Created Optional Function Definition\n\n\n";
 		return true;
 	}
 	return false;
@@ -195,11 +195,11 @@ bool functionI(std::list<Pair>&lexemes, bool printSwitch) {
 		std::cout << "I->{ D }\n";
 	}
 	std::string token = getCurrentToken(lexemes);
-	std::cout << "in I, token is : " << token << std::endl;
+	//std::cout << "in I, token is : " << token << std::endl;
 	if (token == "{") {
 		if (functionD(lexemes, printSwitch)) {
 			token = getCurrentToken(lexemes);
-			std::cout << " after D in i, token is : " << token;
+			//std::cout << " after D in i, token is : " << token;
 			return token == "}";
 		}
 		else { /* not function D */ 
@@ -218,7 +218,7 @@ bool functionC(std::list<Pair>&lexemes, bool printSwitch) {
 		return true;
 	}
 	else {
-		std::cout << "N did not pass in C " << std::endl;
+		//std::cout << "N did not pass in C " << std::endl;
 		return functionEprime(printSwitch);
 	}
 }
@@ -263,7 +263,7 @@ bool functionL(std::list<Pair>& lexemes, bool printSwitch) {
 	if (functionG(lexemes, printSwitch)) {
 		Pair temp = getPair(lexemes);
 		token = temp.getToken();
-		std::cout << "Looking for , in L " << token << std::endl;
+		//std::cout << "Looking for , in L " << token << std::endl;
 		if (token == ",") {
 			//std::cout << "looking for , " << std::endl;
 			if (functionL(lexemes, printSwitch)) { return true; }
@@ -350,7 +350,7 @@ bool functionR(std::list<Pair>&lexemes, bool printSwitch) {
 		token = getCurrentToken(lexemes);
 		if (token == ":=") {
 			if (functionX(lexemes, printSwitch)) {
-				std::cout << " Expression G := X\n";
+				//std::cout << " Expression G := X\n";
 				token = getCurrentToken(lexemes);
 				return token == ";";
 			}
@@ -421,7 +421,7 @@ bool functionT(std::list<Pair>&lexemes, bool printSwitch) {
 	std::string token;
 	Pair temp = getPair(lexemes);
 	token = temp.getToken();
-	std::cout << " in T: " << token << std::endl;
+	//std::cout << " in T: " << token << std::endl;
 	if (token == "return") {
 		return functionTprime(lexemes, printSwitch);
 	}
@@ -435,6 +435,7 @@ bool functionTprime(std::list<Pair>&lexemes, bool printSwitch) {
 	if (printSwitch) { std::cout << "Tprime-> ; | X;\n"; }
 	if (functionX(lexemes, printSwitch)) {
 		std::string token = getCurrentToken(lexemes);
+		//std::cout << "t\t\t\t\ttoken in t is : " << token << std::endl; 
 		if (token == ";") {
 			//std::cout << "matched ; in Tprime/x " << std::endl;
 			return true;
@@ -471,20 +472,46 @@ bool functionU(std::list<Pair>&lexemes, bool printSwitch) {
 
 bool functionV(std::list<Pair>&lexemes, bool printSwitch) {
 	if (printSwitch) { std::cout << "V-> read ( L ); \n"; }
-	std::string token = getCurrentToken(lexemes);
+	//showTop("in v, top is: ", lexemes);
+	Pair temp = getPair(lexemes);
+	std::string token = temp.getToken();
+	//std::cout << "\n\nIn v, token is: " << token << std::endl;
 	if (token == "read") {
-		token = getCurrentToken(lexemes);
 		if (token == "(") {
+			temp = getPair(lexemes);
+			token = temp.getToken();
 			if (functionL(lexemes, printSwitch)) {
-				token = getCurrentToken(lexemes);
+				temp = getPair(lexemes);
+				token = temp.getToken();
 				if (token == ")") {
-					token = getCurrentToken(lexemes);
+					temp = getPair(lexemes);
+					token = temp.getToken();
 					if (token == ";") {
 						return true;
 					}
+					else {
+						lexemes.push_front(temp);
+						return false;
+					}
+				}
+				else {
+					lexemes.push_front(temp);
+					return false;
 				}
 			}
+			else {
+				lexemes.push_front(temp);
+				return false;
+			}
 		}
+		else {
+			lexemes.push_front(temp);
+			return false;
+		}
+	}
+	else {
+		lexemes.push_front(temp);
+		return false;
 	}
 	// if token != read
 	return false;
@@ -578,8 +605,8 @@ bool functionAprime(std::list<Pair>&lexemes, bool printSwitch) {
 
 bool functionA2(std::list<Pair>&lexemes, bool printSwitch) {
 	if (printSwitch) { std::cout << "A2-> *B'A2 | /B'A2 | E'\n"; }
-	std::string token = getCurrentToken(lexemes);
-	std::cout << " in A2 " << token << std::endl;
+	Pair temp = getPair(lexemes);
+	std::string token = temp.getToken();
 	if (token == "*") {
 		//std::cout << " multiplying " << std::endl;
 		if (functionBprime(lexemes, printSwitch)) {
@@ -596,7 +623,10 @@ bool functionA2(std::list<Pair>&lexemes, bool printSwitch) {
 		}
 		else { return false; }
 	}
-	else { return functionEprime(printSwitch); }
+	else { 
+		lexemes.push_front(temp);
+		return functionEprime(printSwitch); 
+	}
 }
 
 bool functionBprime(std::list<Pair>&lexemes, bool printSwitch) {
@@ -635,11 +665,11 @@ bool functionCprime(std::list<Pair>&lexemes, bool printSwitch) {
 		else {
 			lexemes.push_front(temp);
 		}
-		//return true;
+		return true;
 	}
-	std::cout << "before d Prime: " << token << std::endl;
+	//std::cout << "before d Prime: " << token << std::endl;
 	if (functionDprime(lexemes, printSwitch)) { 
-		std::cout << " Dprime in c is true " << std::endl; 
+		//std::cout << " Dprime in c is true " << std::endl; 
 		return true;
 	}
 	if (functionFprime(lexemes, printSwitch)) { 
@@ -648,8 +678,10 @@ bool functionCprime(std::list<Pair>&lexemes, bool printSwitch) {
 	}
 	token = getCurrentToken(lexemes);
 	if (token == "(") {
+		//std::cout << "\ntrying X from C\n" << std::endl;
 		if (functionX(lexemes, printSwitch)) {
 			token = getCurrentToken(lexemes);
+			//std::cout << "\n\n returning in Cprime/X   " << token << std::endl;
 			if (token == ")") {
 				return true;
 			}
@@ -660,7 +692,7 @@ bool functionCprime(std::list<Pair>&lexemes, bool printSwitch) {
 
 bool functionEprime(bool printSwitch) {
 	if (printSwitch) { std::cout << "Eprime -> epsilon\n"; }
-	std::cout << "Eprime\n";
+	//std::cout << "Eprime\n";
 	return true;
 }
 
@@ -670,13 +702,13 @@ bool functionDprime(std::list<Pair>& lexemes, bool printSwitch) {
 	Pair temp = getPair(lexemes);
 	std::string currToken = temp.getToken();
 	std::string currType = temp.getType();
-	std::cout  << currToken  << std::endl;
+	//std::cout  << currToken  << std::endl;
 	if (currType == "integer") {
-		std::cout << currType << " is an integer!\n";
+		//std::cout << currType << " is an integer!\n";
 		return true;
 	}
 	else {
-		std::cout << currType << " is not an integer\n";
+		//std::cout << currType << " is not an integer\n";
 		lexemes.push_front(temp);
 		return false;
 	}
@@ -684,17 +716,16 @@ bool functionDprime(std::list<Pair>& lexemes, bool printSwitch) {
 
 bool functionFprime(std::list<Pair>& lexemes, bool printSwitch) {
 	if (printSwitch) { std::cout << "Fprime-> real\n"; }
-	std::cout << "Fprime\n";
 	Pair temp = getPair(lexemes);
 	std::string currToken = temp.getToken();
 	std::string currType = temp.getType();
-	std::cout << currToken << std::endl;
+	//std::cout << currToken << std::endl;
 	if (currType == "real") {
-		std::cout << currToken << " is a real!\n";
+		//std::cout << currToken << " is a real!\n";
 		return true;
 	}
 	else {
-		std::cout << currToken << " is not a real\n";
+		//std::cout << currToken << " is not a real\n";
 		lexemes.push_front(temp);
 		return false;
 	}
@@ -713,7 +744,7 @@ bool functionG(std::list<Pair>& lexemes, bool printSwitch) {
 		return true;
 	}
 	else {
-	//	std::cout << currToken << " is not an identifier\n";
+		//std::cout << currToken << " is not an identifier\n";
 		lexemes.push_front(temp);
 		return false;
 	}
