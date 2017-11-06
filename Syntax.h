@@ -6,10 +6,11 @@
 #include "Pair.h"
 #include <list>
 /* prototypes */
-bool functionG(Pair currToken,bool printSwitch);
 bool functionEprime(bool printSwitch);
-bool functionDprime(bool printSwitch);
-bool functionFprime(bool printSwitch);
+bool functionFprime(std::list<Pair>& lexemes, bool printSwitch);
+bool functionG(std::list<Pair>& lexemes,bool printSwitch);
+bool functionM(std::list<Pair>& lexemes, bool printSwitch);
+bool functionDprime(std::list<Pair>& lexemes, bool printSwitch);
 bool functionA(std::list<Pair> lexemes, bool printSwitch);
 bool functionB(std::list<Pair>& lexemes, bool printSwitch);
 bool functionE(std::list<Pair>& lexemes, bool printSwitch);
@@ -17,7 +18,6 @@ bool functionF(std::list<Pair>& lexemes, bool printSwitch);
 bool functionH(std::list<Pair>& lexemes, bool printSwitch);
 bool functionJ(std::list<Pair>& lexemes, bool printSwitch);
 bool functionK(std::list<Pair>& lexemes, bool printSwitch);
-bool functionM(std::list<Pair>& lexemes, bool printSwitch);
 bool functionI(std::list<Pair>& lexemes, bool printSwitch);
 bool functionC(std::list<Pair>& lexemes, bool printSwitch);
 bool functionN(std::list<Pair>& lexemes, bool printSwitch);

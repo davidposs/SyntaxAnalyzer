@@ -18,6 +18,9 @@
 int main() {
 	std::string input = "sample.txt";
 
+
+
+
 	bool keepGoing = true;
 	while (keepGoing) {
 		std::cout << "Enter a file to convert or hit Ctrl+c to quit\nFile: ";
