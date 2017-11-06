@@ -296,7 +296,6 @@ bool functionD(std::list<Pair>&lexemes, bool printSwitch) {
 		return true;
 	}
 	else {
-		//std::cout << "failed functionD " << std::endl;
 		return false;
 	}
 }
@@ -648,7 +647,6 @@ bool functionCprime(std::list<Pair>&lexemes, bool printSwitch) {
 		return true; 
 	}
 	token = getCurrentToken(lexemes);
-	std::cout << "asdfadfasdf " << token << std::endl;
 	if (token == "(") {
 		if (functionX(lexemes, printSwitch)) {
 			token = getCurrentToken(lexemes);
